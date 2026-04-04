@@ -120,29 +120,28 @@ def _has_subordinate_with_value(
     var: VariableDefinition,
     variables: list[VariableDefinition],
 ) -> bool:
-    """変数が属するグループ項目の従属項目にVALUE句があるかを判定する。
+    """変数の親グループ自体にVALUE句があるかを判定する。
 
-    自身の親グループの従属項目（兄弟含む）にVALUE句がある場合、
-    Uninitialized警告の除外対象となる。
+    親グループにVALUE句がある場合、その従属項目は
+    _propagate_group_valueで初期化済みセットに追加されるため、
+    ここでは親グループ自体のVALUE句のみを確認する。
 
-    ここでは、同じ親を持つ他の変数にVALUE句があるかではなく、
-    親グループ自体にVALUE句があるかを確認する。
-    設計上は「グループ項目の従属項目にVALUE句がある場合」なので、
-    親グループの子孫のいずれかにVALUE句があれば除外対象。
+    注意: 兄弟変数にVALUE句があるだけでは除外しない。
+    親グループ全体がVALUE句で初期化されている場合のみ除外対象。
 
     Args:
         var: 対象の変数定義
         variables: 全変数定義リスト
 
     Returns:
-        従属項目にVALUE句があればTrue
+        親グループにVALUE句があればTrue
     """
     if var.parent_name is None:
         return False
 
-    # 親グループの従属項目（自身を除く）にVALUE句があるか確認
+    # 親グループ自体にVALUE句があるか確認
     for v in variables:
-        if v.parent_name == var.parent_name and v.name != var.name and v.has_value:
+        if v.name == var.parent_name and v.has_value:
             return True
 
     return False

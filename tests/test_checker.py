@@ -228,16 +228,29 @@ class TestCheckUninitialized:
         assert len(result) == 0
 
     def test_no_uninitialized_subordinate_with_value(self):
-        """グループ項目の従属項目にVALUE句がある場合、同じ親の他の子は除外。"""
+        """親グループにVALUE句がある場合、子は除外される。"""
         variables = [
-            _var("WK-GROUP", level=1, is_group=True),
-            _var("WK-A", level=5, parent_name="WK-GROUP", has_value=True),
+            _var("WK-GROUP", level=1, is_group=True, has_value=True),
+            _var("WK-A", level=5, parent_name="WK-GROUP", has_value=False),
             _var("WK-B", level=5, parent_name="WK-GROUP", has_value=False),
         ]
         statements = [_stmt(referenced_vars=["WK-B"])]
         result = check(variables, statements)
         uninit = [w for w in result if w.warning_type == "Uninitialized"]
         assert len(uninit) == 0
+
+    def test_uninitialized_sibling_has_value_but_parent_does_not(self):
+        """親グループにVALUE句がなく兄弟にVALUE句がある場合、Uninitialized警告が出る。"""
+        variables = [
+            _var("WK-GROUP", level=1, is_group=True, has_value=False),
+            _var("WK-A", level=5, parent_name="WK-GROUP", has_value=True),
+            _var("WK-B", level=5, parent_name="WK-GROUP", has_value=False),
+        ]
+        statements = [_stmt(referenced_vars=["WK-B"])]
+        result = check(variables, statements)
+        uninit = [w for w in result if w.warning_type == "Uninitialized"]
+        assert len(uninit) == 1
+        assert uninit[0].variable_name == "WK-B"
 
 
 class TestCheckGroupPropagation:
