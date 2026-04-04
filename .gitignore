@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+
+# PyInstaller
+build/
+*.spec
+
+# テスト
+.pytest_cache/
+
+# IDE
+.vscode/
+*.swp
+
+# 出力ファイル
+check_result.csv
