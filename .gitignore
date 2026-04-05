@@ -15,5 +15,8 @@ build/
 .vscode/
 *.swp
 
+# Kiro hooks（ローカル専用）
+.kiro/hooks/
+
 # 出力ファイル
 check_result.csv
