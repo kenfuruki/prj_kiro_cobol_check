@@ -94,7 +94,7 @@ def normalize_lines(file_path: str, encoding: str = "cp932") -> list[NormalizedL
     Returns:
         正規化済みのNormalizedLineリスト
     """
-    with open(file_path, encoding=encoding) as f:
+    with open(file_path, encoding=encoding, errors="replace") as f:
         raw_lines = f.readlines()
 
     return _normalize_raw_lines(raw_lines)

@@ -1,5 +1,7 @@
 ---
 inclusion: auto
+name: python-venv
+description: Pythonプロジェクトの構築やライブラリインストール時に仮想環境（venv）を使用するルール。Python環境のセットアップやpip installを行う際に使用。
 ---
 
 # Steering: Python仮想環境の管理
